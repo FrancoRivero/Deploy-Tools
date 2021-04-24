@@ -1,0 +1,68 @@
+{
+    "description": "Packer template for building a virtual machine with FreeBSD",
+    "variables": {
+        "iso_url": "http/ISO_NAME",
+        "iso_checksum": "ISO_CHECKSUM",
+        "keep_registered": "true",
+        "headless": "false",
+
+        "vm_description": "FreeBSD 13 TEST",
+        "vm_version": "1.0.0",
+
+        "vm_name": "FreeBSD_for_testing",
+        "disk_size": "80000",
+        "memory": "4096",
+        "cpus": "4",
+        "vram": "64",
+
+        "fullname": "FreeBSD-13",
+        "username": "developer",
+        "password": "dev12345"
+    },
+    "builders": [{
+        "type": "virtualbox-iso",
+        "guest_os_type": "FreeBSD_64",
+        "http_directory": "http",
+        "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+
+        "output_directory": "{{user `output_path`}}/{{user `vm_name`}}",
+        "export_opts": [
+            "--manifest",
+            "--vsys", "0",
+            "--description", "{{user `vm_description`}}",
+            "--version", "{{user `vm_version`}}"
+        ],
+
+        "iso_url": "{{user `iso_url`}}",
+        "iso_checksum": "{{user `iso_checksum`}}",
+
+        "ssh_username": "{{user `username`}}",
+        "ssh_password": "{{user `password`}}",
+        "ssh_port": 22,
+        "ssh_wait_timeout": "10000s",
+
+        "disk_size": "{{user `disk_size`}}",
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+            ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+            ["modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}"],
+            ["modifyvm", "{{.Name}}", "--clipboard-mode", "bidirectional" ]
+        ],
+        "vm_name": "{{user `vm_name`}}",
+        "keep_registered": "{{user `keep_registered`}}",
+        "headless": "{{user `headless`}}",
+        "boot_wait": "13s",
+        "boot_command": [
+            "<wait10>",
+            "<enter><wait>",
+            "<enter><wait><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><enter>"
+        ],
+        "shutdown_command": "echo '{{ user `password` }}'| sudo -S shutdown -P now"
+
+    }],
+    "provisioners": [{
+            "type": "shell",
+            "script": "shared/install_VBGuestAdditions.sh",
+            "execute_command": "echo '{{ user `password` }}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+    }]
+}
