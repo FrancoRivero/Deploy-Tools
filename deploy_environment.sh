@@ -33,7 +33,7 @@ main() {
 
     #Get FreeBSD iso
     if [ ! -f ${config["HOME"]}/http/${config["ISO_NAME"]} ]; then
-        iso_freebsd_path=$(sudo find / -name "${config["ISO_NAME"]}" -print | head -n 1)
+        iso_freebsd_path=$(sudo find /home -name "${config["ISO_NAME"]}" -print | head -n 1)
         if [[ "$iso_freebsd_path" == "" ]]; then
             wget https://download.freebsd.org/ftp/releases/amd64/amd64/ISO-IMAGES/${config["VERSION"]}/${config["ISO_NAME"]}
         fi 
@@ -41,7 +41,7 @@ main() {
     fi
 
     #Evaluate path
-    output_path=$(sudo find / -type d -name "VirtualBox VMs")
+    output_path=$(sudo find /home -type d -name "VirtualBox VMs")
 
     cp ${config["PACKER_CONFIG_BASE"]} ${config["PACKER_CONFIG"]}
     sed -i 's|ISO_NAME|'${config["ISO_NAME"]}'|g' ${config["PACKER_CONFIG"]}
