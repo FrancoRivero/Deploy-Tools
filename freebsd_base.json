@@ -102,10 +102,17 @@
             "no<enter><wait>",
             "<enter><wait>",
             "Y<wait>",
+            "su<enter><wait>",
+            "pkg update /y<enter><wait3m>",
+            "pkg upgrade /y<enter><wait3m>",
+            "pkg install /y sudo<enter><wait3m>",
+            "sed /i -- /e -88s&.*&developer ALL)*ALL( ALL&g- &usr&local&etc&sudoers<enter><wait>",
+            "<enter>!#$%&/()=?¡<wait10m>",
+            "exit<enter><wait>",
             "exit<enter><wait>",
             "<wait10><wait10><wait10><wait10><wait10>"
         ],
-        "shutdown_command": "poweroff; poweroff"
+        "shutdown_command": "sudo poweroff"
     }],
     "provisioners": []
 }
