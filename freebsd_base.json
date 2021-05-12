@@ -41,18 +41,17 @@
             ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
             ["modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}"],
             ["modifyvm", "{{.Name}}", "--clipboard-mode", "bidirectional"],
-            ["modifyvm", "{{.Name}}", "--nic1", "bridged", "--bridgeadapter1","NETWORK_INTERFACE"]
+            ["modifyvm", "{{.Name}}", "--nic2", "bridged", "--bridgeadapter2","NETWORK_INTERFACE"]
         ],
         "vm_name": "{{user `vm_name`}}",
         "keep_registered": "{{user `keep_registered`}}",
         "headless": "{{user `headless`}}",
         "boot_wait": "40s",
         "boot_command": [
-            "I<wait5>",
+            "I<wait>",
             "<down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><wait><enter>",
-            "<wait2><up><enter><wait2>",
-            "{{user `hostname`}}<enter><wait>",
-            "<wait1m>",
+            "<wait><up><enter><wait>",
+            "{{user `hostname`}}<enter><wait20>",
             "<spacebar><wait>",
             "<down><down><down><down><down><spacebar><wait><down><spacebar><wait>",
             "<enter><wait20>",
@@ -66,11 +65,10 @@
             "{{user `password`}}<enter><wait>",
             "<enter><wait5>",
             "<enter><wait5>",
-            "<enter><wait5>",
-            "<wait10>",
+            "<enter><wait20>",
             "<enter><wait5>",
             "<enter><wait15>",
-            "<enter><wait10>",
+            "<enter><wait40>",
             "<down><enter><wait5>",
             "<down><down><enter><wait5>",
             "<enter><wait5>",
@@ -107,7 +105,8 @@
             "sed /i -- /e -88s&.}&developer ALL)*ALL( ALL&g- &usr&local&etc&sudoers<enter><wait>",
             "exit<enter><wait>",
             "exit<enter><wait>",
-            "enter<wait>"
+            "R",
+            "<wait10><wait10><wait10><wait10><wait10>"
         ],
         "shutdown_command": "echo '{{ user `password`}}'| sudo -S shutdown -p now"
     }],
