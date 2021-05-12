@@ -7,6 +7,7 @@ config=(
     [PACKER_CONFIG_BASE]="freebsd_base.json"
     [PACKER_CONFIG]="freebsd.json"
 )
+
 detect_os_and_install_dependecies() {
     OS=$(hostnamectl | grep "Operating System:" )
     if [[ $(echo \"$OS\" | grep "Ubuntu") ]]; then
@@ -22,9 +23,24 @@ detect_os_and_install_dependecies() {
     fi
 }
 
+detect_network_connection() {
+    interfaces=$(nmcli device status | awk '{print $1}' | sed -n '1!p')
+    for interface in $interfaces
+    do
+        ping -I $interface -c 1 www.google.com >/dev/null 2>&1
+        cmd=$(echo $?)
+        if [[ $cmd == 0 ]];then
+            network_output=$interface
+        fi
+    done
+}
+
 main() {
     #Install dependecies
     detect_os_and_install_dependecies
+
+    #Evaluate interfaces
+    detect_network_connection
 
     #Create folder if it doesn't exist
     if [ ! -d ${config["HOME"]}/http ]; then
@@ -42,11 +58,11 @@ main() {
 
     #Evaluate path
     output_path=$(sudo find /home -type d -name "VirtualBox VMs")
-
     cp ${config["PACKER_CONFIG_BASE"]} ${config["PACKER_CONFIG"]}
     sed -i 's|ISO_NAME|'${config["ISO_NAME"]}'|g' ${config["PACKER_CONFIG"]}
     ISOSHA2=$(sha256sum ${config["HOME"]}/http/${config["ISO_NAME"]} | awk '{print $1}')
     sed -i 's|ISO_CHECKSUM|'$ISOSHA2'|g' ${config["PACKER_CONFIG"]}
+    sed -i 's|NETWORK_INTERFACE|'$network_output'|g' ${config["PACKER_CONFIG"]}
 
     #Validate and build VM with Packer
     packer validate ${config["PACKER_CONFIG"]}

@@ -12,7 +12,8 @@ sudo apt-get install -y linux-headers-$(uname -r)\
                         dkms\
                         sed\
                         wget\
-                        virtualbox
+                        virtualbox\
+                        network-manager
 
 #Install Packer
 if [[ -z $(sudo apt list -a packer 2>/dev/null | grep "installed") ]]; then

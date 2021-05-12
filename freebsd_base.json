@@ -12,7 +12,7 @@
         "memory": "4096",
         "cpus": "4",
         "vram": "64",
-        "hostname": "FreeBSD 13 Test",
+        "hostname": "FreeBSD/13/Test",
         "username": "developer",
         "password": "dev12345",
         "autoboot_delay": "-1"
@@ -22,7 +22,6 @@
         "guest_os_type": "FreeBSD_64",
         "http_directory": "http",
         "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
-
         "output_directory": "{{user `output_path`}}/{{user `vm_name`}}",
         "export_opts": [
             "--manifest",
@@ -30,28 +29,26 @@
             "--description", "{{user `vm_description`}}",
             "--version", "{{user `vm_version`}}"
         ],
-
         "iso_url": "{{user `iso_url`}}",
         "iso_checksum": "{{user `iso_checksum`}}",
-
         "ssh_username": "{{user `username`}}",
         "ssh_password": "{{user `password`}}",
         "ssh_port": 22,
         "ssh_wait_timeout": "10000s",
-
         "disk_size": "{{user `disk_size`}}",
         "vboxmanage": [
             ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
             ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
             ["modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}"],
-            ["modifyvm", "{{.Name}}", "--clipboard-mode", "bidirectional" ]
+            ["modifyvm", "{{.Name}}", "--clipboard-mode", "bidirectional"],
+            ["modifyvm", "{{.Name}}", "--nic1", "bridged", "--bridgeadapter1","NETWORK_INTERFACE"]
         ],
         "vm_name": "{{user `vm_name`}}",
         "keep_registered": "{{user `keep_registered`}}",
         "headless": "{{user `headless`}}",
         "boot_wait": "40s",
         "boot_command": [
-            "I<wait>",
+            "I<wait5>",
             "<down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><wait><enter>",
             "<wait2><up><enter><wait2>",
             "{{user `hostname`}}<enter><wait>",
@@ -106,6 +103,7 @@
             "pkg update /y<enter><wait3m>",
             "pkg upgrade /y<enter><wait3m>",
             "pkg install /y sudo<enter><wait1m>",
+            "sed /i -- /e -15s&.}&PermitRootLogin yes&g- &etc&ssh&sshd?config<enter><wait>",
             "sed /i -- /e -88s&.}&developer ALL)*ALL( ALL&g- &usr&local&etc&sudoers<enter><wait>",
             "exit<enter><wait>",
             "exit<enter><wait>",
