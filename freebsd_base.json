@@ -100,7 +100,7 @@
             "su<enter><wait>",
             "pkg update /y<enter><wait3m>",
             "pkg upgrade /y<enter><wait3m>",
-            "pkg install /y sudo<enter><wait1m>",
+            "pkg install /y sudo nano<enter><wait1m>",
             "sed /i -- /e -15s&.}&PermitRootLogin yes&g- &etc&ssh&sshd?config<enter><wait>",
             "sed /i -- /e -88s&.}&developer ALL)*ALL( ALL&g- &usr&local&etc&sudoers<enter><wait>",
             "exit<enter><wait>",
