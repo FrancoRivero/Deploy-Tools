@@ -59,11 +59,11 @@ main() {
     fi
 
     #Download repository
-    if [ ! -d ~/Desktop/repository ]; then
-        mkdir ~/Desktop/repository
+    if [ ! -d ~/repository ]; then
+        mkdir ~/repository
     fi
-    cd ~/Desktop/repository
-    if [ ! -d ~/Desktop/repository/freebsd-src ]; then
+    cd ~/repository
+    if [ ! -d ~/repository/freebsd-src ]; then
         git clone git@github.com:${config["USER_GIT"]}/freebsd-src.git
     fi
     cd freebsd-src
