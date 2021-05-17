@@ -31,9 +31,7 @@ sudo apt-get install -y linux-headers-$(uname -r)\
                         make\
                         dkms\
                         sed\
-                        wget\
-                        virtualbox\
-                        network-manager &>> $LOG_FILE
+                        wget &>> $LOG_FILE
 
 cat $LOG_FILE | grep "Failed" >/dev/null 2>&1
 if [ $? -eq 0 ]; then

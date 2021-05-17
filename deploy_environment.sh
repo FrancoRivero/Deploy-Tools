@@ -27,23 +27,6 @@ detect_os_and_install_dependecies() {
     fi
 }
 
-detect_network_connection() {
-    interfaces=$(nmcli device status | awk '{print $1}' | sed -n '1!p')
-    for interface in $interfaces
-    do
-        echo $interface >> ${config["LOG_FOLDER"]}/detect_network.log
-        echo "------------------------------------------------------------------------------------------------------" >> ${config["LOG_FOLDER"]}/detect_network.log
-        ping -I $interface -c 1 www.google.com >> ${config["LOG_FOLDER"]}/detect_network.log
-        if [[ $? == 0 ]];then
-            network_output=$interface
-            return 0
-        fi
-    done
-    echo -e "\e[31m\e[1mNetwork detection failed\e[0m"
-    echo "LOGS: ${config["LOG_FOLDER"]}"
-    exit 1
-}
-
 main() {
     echo -e "\e[32m\e[1mCreating development environment...\e[0m"
     echo -e "\e[33m\e[1m--> Installing dependencies...\e[0m"
@@ -60,16 +43,6 @@ main() {
         echo "LOGS: ${config["LOG_FOLDER"]}"
         exit 1
     fi
-
-    #Evaluate interfaces
-    echo -e "\e[33m\e[1m--> Network detection...\e[0m"
-    detect_network_connection
-    if [ $? -ne 0 ]; then
-        echo -e "\e[31m\e[1mNetwork detection failed\e[0m"
-        echo "LOGS: ${config["LOG_FOLDER"]}"
-        exit 1
-    fi
-    echo -e "\e[32m\tNetwork interface\t\t\e[1m[X]\e \e[0m"
 
     #Create folder if it doesn't exist
     echo -e "\e[33m\e[1m--> Create environment to create a virtual machine...\e[0m"
@@ -166,7 +139,7 @@ main() {
 
     #Clean output
     if [[ -d "${config["HOME"]}/packer_cache" ]]; then
-        rm -rf packer_cache
+        rm -rf ${config["HOME"]}/packer_cache
     fi
     if [[ -f "${config["HOME"]}/${config["PACKER_CONFIG"]}" ]]; then
         rm ${config["HOME"]}/${config["PACKER_CONFIG"]}

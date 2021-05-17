@@ -41,7 +41,7 @@
             ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
             ["modifyvm", "{{.Name}}", "--vram", "{{user `vram`}}"],
             ["modifyvm", "{{.Name}}", "--clipboard-mode", "bidirectional"],
-            ["modifyvm", "{{.Name}}", "--nic2", "bridged", "--bridgeadapter2","NETWORK_INTERFACE"]
+            ["modifyvm", "{{.Name}}", "--natpf1", "SSH,tcp,127.0.0.1,2522,10.0.2.15,22"]
         ],
         "vm_name": "{{user `vm_name`}}",
         "keep_registered": "{{user `keep_registered`}}",
