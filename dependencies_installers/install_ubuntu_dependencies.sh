@@ -1,10 +1,12 @@
 #!/bin/bash
-LOG_FILE="$1/installation_dependencies.log"
+LOG_FOLDER=$1
+LOG_FILE="$LOG_FOLDER/installation_dependencies.log"
 
 sudo apt update &>> $LOG_FILE
 cat $LOG_FILE | grep "Failed" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
     echo -e "\e[31m\e[1m\tRepository update failed\e[0m"
+    echo "LOGS: $LOG_FOLDER"
     exit 1
 fi
 echo "------------------------------------------------------------------------------------------------------" >> $LOG_FILE
@@ -15,6 +17,7 @@ sudo apt upgrade -y &>> $LOG_FILE
 cat $LOG_FILE | grep "Failed" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
     echo -e "\e[31m\e[1m\tPackages update failed\e[0m"
+    echo "LOGS: $LOG_FOLDER"
     exit 1
 fi
 echo "------------------------------------------------------------------------------------------------------" >> $LOG_FILE
@@ -35,6 +38,7 @@ sudo apt-get install -y linux-headers-$(uname -r)\
 cat $LOG_FILE | grep "Failed" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
     echo -e "\e[31m\e[1m\tInstall dependencies failed\e[0m"
+    echo "LOGS: $LOG_FOLDER"
     exit 1
 fi
 echo "------------------------------------------------------------------------------------------------------" >> $LOG_FILE
@@ -62,6 +66,7 @@ if [[ -z $(sudo apt list -a virtualbox 2>/dev/null | grep "installed") ]];then
     fi
     if [[ -z $(sudo apt list -a virtualbox 2>/dev/null | grep "installed") ]];then
         echo -e "\e[31m\e[1m\tInstall VirtualBox failed\e[0m"
+        echo "LOGS: $LOG_FOLDER"
         exit 1
     fi
     echo "------------------------------------------------------------------------------------------------------" >> $LOG_FILE
@@ -78,6 +83,7 @@ if [[ -z $(sudo apt list -a packer 2>/dev/null | grep "installed") ]]; then
 fi
 if [[ -z $(sudo apt list -a packer 2>/dev/null | grep "installed") ]]; then
     echo -e "\e[31m\e[1m\tInstall packer failed\e[0m"
+    echo "LOGS: $LOG_FOLDER"
     exit 1
 fi
 echo "------------------------------------------------------------------------------------------------------" >> $LOG_FILE

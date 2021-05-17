@@ -40,6 +40,7 @@ detect_network_connection() {
         fi
     done
     echo -e "\e[31m\e[1mNetwork detection failed\e[0m"
+    echo "LOGS: ${config["LOG_FOLDER"]}"
     exit 1
 }
 
@@ -56,6 +57,7 @@ main() {
     detect_os_and_install_dependecies
     if [ $? -ne 0 ]; then
         echo -e "\e[31m\e[1mInstall dependencies failed\e[0m"
+        echo "LOGS: ${config["LOG_FOLDER"]}"
         exit 1
     fi
 
@@ -64,6 +66,7 @@ main() {
     detect_network_connection
     if [ $? -ne 0 ]; then
         echo -e "\e[31m\e[1mNetwork detection failed\e[0m"
+        echo "LOGS: ${config["LOG_FOLDER"]}"
         exit 1
     fi
     echo -e "\e[32m\tNetwork interface\t\t\e[1m[X]\e \e[0m"
@@ -75,6 +78,7 @@ main() {
     fi
     if [ $? -ne 0 ]; then
         echo -e "\e[31m\e[1mhttp folder to create failed\e[0m"
+        echo "LOGS: ${config["LOG_FOLDER"]}"
         exit 1
     fi
     echo -e "\e[32m\tHTTP folder\t\t\t\e[1m[X]\e \e[0m"
@@ -89,6 +93,7 @@ main() {
     fi
     if [ ! -f ${config["HOME"]}/http/${config["ISO_NAME"]} ]; then
         echo -e "\e[31m\e[1mFreeBSD image download failed\e[0m"
+        echo "LOGS: ${config["LOG_FOLDER"]}"
         exit 1
     fi
     echo -e "\e[32m\tFreeBSD image\t\t\t\e[1m[X]\e \e[0m"
@@ -105,6 +110,7 @@ main() {
     packer validate ${config["PACKER_CONFIG"]} >> ${config["LOG_FOLDER"]}/create_environment.log
     if [ $? -ne 0 ]; then
         echo -e "\e[31m\e[JSON validation failed\e[0m"
+        echo "LOGS: ${config["LOG_FOLDER"]}"
         exit 1
     fi
     echo -e "\e[32m\tConfiguration file\t\t\e[1m[X]\e \e[0m"
@@ -115,6 +121,7 @@ main() {
         packer build -var output_path="${config["OUTPUT_PATH"]}" ${config["PACKER_CONFIG"]} >> ${config["LOG_FOLDER"]}/building_vm.log
         if [ $? -ne 0 ]; then
             echo -e "\e[31m\e[Build virtual machine failed\e[0m"
+            echo "LOGS: ${config["LOG_FOLDER"]}"
             exit 1
         fi
     fi
@@ -130,6 +137,7 @@ main() {
         git clone git@github.com:${config["GIT_USER"]}/freebsd-src.git &>> ${config["LOG_FOLDER"]}/freebsd_repository.log
         if [ $? -ne 0 ]; then
             echo -e "\e[31m\e[Clone freebsd repository failed\e[0m"
+            echo "LOGS: ${config["LOG_FOLDER"]}"
             exit 1
         fi
     fi
@@ -143,11 +151,13 @@ main() {
             git checkout release/${config["VERSION"]}.0 &>> ${config["LOG_FOLDER"]}/freebsd_repository.log
             if [ $? -ne 0 ]; then
                 echo -e "\e[31m\e[Move to release tag failed\e[0m"
+                echo "LOGS: ${config["LOG_FOLDER"]}"
                 exit 1
             fi
             git switch -c freebsd_scheduler_develop &>> ${config["LOG_FOLDER"]}/freebsd_repository.log
             if [ $? -ne 0 ]; then
                 echo -e "\e[31m\e[Create develop branch failed\e[0m"
+                echo "LOGS: ${config["LOG_FOLDER"]}"
                 exit 1
             fi
         fi
@@ -158,9 +168,8 @@ main() {
     if [[ -d "${config["HOME"]}/packer_cache" ]]; then
         rm -rf packer_cache
     fi
-
-    if [[ -f "${config["PACKER_CONFIG"]}" ]]; then
-        rm ${config["PACKER_CONFIG"]}
+    if [[ -f "${config["HOME"]}/${config["PACKER_CONFIG"]}" ]]; then
+        rm ${config["HOME"]}/${config["PACKER_CONFIG"]}
     fi
     echo -e "\e[32m\e[1mDevelopment environment ready to work!\e[0m"
 }
