@@ -60,7 +60,7 @@ main() {
     if [ ! -f ${config["HOME"]}/http/${config["ISO_NAME"]} ]; then
         iso_freebsd_path=$(sudo find /home -name "${config["ISO_NAME"]}" -print | head -n 1)
         if [[ "$iso_freebsd_path" == "" ]]; then
-            wget https://download.freebsd.org/ftp/releases/amd64/amd64/ISO-IMAGES/${config["VERSION"]}/${config["ISO_NAME"]} >> ${config["LOG_FOLDER"]}/create_environment.log
+            wget https://download.freebsd.org/ftp/releases/amd64/amd64/ISO-IMAGES/${config["VERSION"]}/${config["ISO_NAME"]} &>> ${config["LOG_FOLDER"]}/create_environment.log
         fi 
         mv $iso_freebsd_path ${config["HOME"]}/http/${config["ISO_NAME"]}
     fi
