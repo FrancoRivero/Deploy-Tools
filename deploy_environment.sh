@@ -61,6 +61,7 @@ main() {
         iso_freebsd_path=$(sudo find /home -name "${config["ISO_NAME"]}" -print | head -n 1)
         if [[ "$iso_freebsd_path" == "" ]]; then
             wget https://download.freebsd.org/ftp/releases/amd64/amd64/ISO-IMAGES/${config["VERSION"]}/${config["ISO_NAME"]} &>> ${config["LOG_FOLDER"]}/create_environment.log
+            iso_freebsd_path=$(pwd)/${config["ISO_NAME"]}
         fi 
         mv $iso_freebsd_path ${config["HOME"]}/http/${config["ISO_NAME"]}
     fi

@@ -82,7 +82,7 @@ main() {
     #Install Packer
     if [[ -z $(sudo apt list -a packer 2>/dev/null | grep "installed") ]]; then
         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - &>> $LOG_FILE
-        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"  >> $LOG_FILE
+        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"  &>> $LOG_FILE
         sudo apt-get update &>>$LOG_FILE
         sudo apt-get install packer &>> $LOG_FILE
     fi
