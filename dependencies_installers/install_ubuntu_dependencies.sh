@@ -50,7 +50,7 @@ main() {
     echo -e "\e[32m\tDependencies\t\t\t\e[1m[X]\e \e[0m"
 
     #Update Virtualbox
-    if [[ ! -z $(sudo apt list -a virtualbox 2>/dev/null | grep "installed") ]];then
+    if [[ ! -z $(sudo apt list -a virtualbox* 2>/dev/null | grep "installed") ]];then
         VB_CURRENT_VERSION=$(VBoxManage --version)
         if [[ $? != 0 ]];then
             VB_CURRENT_VERSION=6.0
@@ -62,7 +62,7 @@ main() {
             sudo apt remove virtualbox & >> $LOG_FILE
             install_virtualbox
         fi
-        if [[ -z $(sudo apt list -a virtualbox 2>/dev/null | grep "installed") ]];then
+        if [[ -z $(sudo apt list -a virtualbox* 2>/dev/null | grep "installed") ]];then
             echo -e "\e[31m\e[1m\tInstall VirtualBox failed\e[0m"
             exit 1
         fi
@@ -70,7 +70,7 @@ main() {
         echo "Virtualbox was installed" >> $LOG_FILE
     else
         install_virtualbox
-        if [[ -z $(sudo apt list -a virtualbox 2>/dev/null | grep "installed") ]];then
+        if [[ -z $(sudo apt list -a virtualbox* 2>/dev/null | grep "installed") ]];then
             echo -e "\e[31m\e[1m\tInstall VirtualBox failed\e[0m"
             exit 1
         fi
