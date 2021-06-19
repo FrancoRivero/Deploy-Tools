@@ -79,6 +79,7 @@ main() {
     ISOSHA2=$(sha256sum ${config["HOME"]}/http/${config["ISO_NAME"]} | awk '{print $1}')
     sed -i 's|ISO_CHECKSUM|'$ISOSHA2'|g' ${config["PACKER_CONFIG"]}
     sed -i 's|NETWORK_INTERFACE|'$network_output'|g' ${config["PACKER_CONFIG"]}
+    sed -i 's|FREE_BSD_VERSION|'${config["VERSION"]}'|g' ${config["PACKER_CONFIG"]}
 
     #Validate configuration file
     packer validate ${config["PACKER_CONFIG"]} >> ${config["LOG_FOLDER"]}/create_environment.log
@@ -91,7 +92,7 @@ main() {
     
     #build VM with Packer
     echo -e "\e[33m\e[1m--> Building virtual machine...\e[0m"
-    if [[ ! -d ${config["OUTPUT_PATH"]}/FreeBSD_for_testing ]];then
+    if [[ ! -d ${config["OUTPUT_PATH"]}/FreeBSD_for_testing_${config["VERSION"]} ]];then
         packer build -var output_path="${config["OUTPUT_PATH"]}" ${config["PACKER_CONFIG"]} >> ${config["LOG_FOLDER"]}/building_vm.log
         if [ $? -ne 0 ]; then
             echo -e "\e[31m\e[Build virtual machine failed\e[0m"
